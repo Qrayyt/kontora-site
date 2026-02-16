@@ -12,7 +12,12 @@
   <link rel="stylesheet" href="styles/desktop.css" media="(min-width: 901px)" />
   <link rel="stylesheet" href="styles/mobile.css" media="(max-width: 900px)" />
 </head>
-<body>
+<body class="is-loading">
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro__brand"><span class="brand__dot">.</span>kontora</div>
+    <div class="intro__line"></div>
+  </div>
+
   <div class="noise" aria-hidden="true"></div>
   <div class="glow glow--a" aria-hidden="true"></div>
   <div class="glow glow--b" aria-hidden="true"></div>
@@ -31,13 +36,13 @@
   <main>
     <section id="hero" class="hero">
       <div class="hero__grid">
-        <div class="hero__bgtype">.kontora</div>
+        <div class="hero__bgtype" data-animate="hero-bg">.kontora</div>
         <div class="hero__center">
           <img id="heroProduct" class="hero__product" src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png" alt="Мощный игровой ПК" draggable="false" />
           <div class="hero__text">
-            <h1 class="hero__title">Мощные ПК<br><span class="hero__accent">без компромиссов</span></h1>
-            <p class="hero__subtitle">Белые сборки. RGB. Тишина и производительность. Собираем так, как себе.</p>
-            <div class="hero__cta">
+            <h1 class="hero__title" data-animate="hero-title">Мощные ПК<br><span class="hero__accent">без компромиссов</span></h1>
+            <p class="hero__subtitle" data-animate="hero-subtitle">Белые сборки. RGB. Тишина и производительность. Собираем так, как себе.</p>
+            <div class="hero__cta" data-animate="hero-cta">
               <a class="btn btn--solid" href="#catalog">Каталог</a>
               <a class="btn btn--ghost" href="#contacts">Заказать сборку</a>
             </div>
@@ -46,7 +51,7 @@
       </div>
     </section>
 
-    <section id="catalog" class="section">
+    <section id="catalog" class="section reveal">
       <div class="section__head">
         <div>
           <h2 class="section__title">Каталог</h2>
@@ -59,14 +64,14 @@
       <div id="catalogGrid" class="grid"></div>
     </section>
 
-    <section id="contacts" class="section section--contacts">
+    <section id="contacts" class="section section--contacts reveal">
       <div class="section__head">
         <h2 class="section__title">Контакты</h2>
       </div>
       <div class="contacts">
-        <div class="contactCard"><div class="contactCard__title">Telegram</div><div class="contactCard__body">@kontora</div></div>
-        <div class="contactCard"><div class="contactCard__title">Email</div><div class="contactCard__body">hello@kontora.ru</div></div>
-        <div class="contactCard"><div class="contactCard__title">Admin</div><div class="contactCard__body"><a href="admin/">Открыть панель управления</a></div></div>
+        <div class="contactCard reveal"><div class="contactCard__title">Telegram</div><div class="contactCard__body">@kontora</div></div>
+        <div class="contactCard reveal"><div class="contactCard__title">Email</div><div class="contactCard__body">hello@kontora.ru</div></div>
+        <div class="contactCard reveal"><div class="contactCard__title">Admin</div><div class="contactCard__body"><a href="admin/">Открыть панель управления</a></div></div>
       </div>
       <footer class="footer">
         <span>© <span id="year"></span> .kontora</span>
