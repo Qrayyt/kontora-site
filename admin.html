@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — .kontora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="glow glow--a" aria-hidden="true"></div>
+  <div class="glow glow--b" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand__dot">.</span><span class="brand__name">kontora</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html#catalog">На сайт</a>
+    </nav>
+  </header>
+
+  <main style="padding-top:92px">
+    <section class="section" style="border-top:none; padding-top:34px;">
+      <div class="section__head">
+        <div>
+          <h2 class="section__title">Панель каталога</h2>
+          <p class="section__desc">
+            Тут правим товары. Сохраняется в браузере (localStorage) и сразу видно на сайте.
+          </p>
+        </div>
+        <div class="section__actions">
+          <button id="exportBtn" class="mini" type="button">Экспорт JSON</button>
+          <label class="mini" style="cursor:pointer;">
+            Импорт JSON
+            <input id="importFile" type="file" accept="application/json" hidden />
+          </label>
+          <button id="saveBtn" class="mini" type="button">Сохранить</button>
+        </div>
+      </div>
+
+      <div id="lock" class="contactCard" style="max-width:520px;">
+        <div class="contactCard__title">Вход</div>
+        <div class="contactCard__body">
+          <p class="muted" style="margin-top:0">
+            Это не “реальная” защита (GitHub Pages). Просто чтобы лишние не лазили.
+          </p>
+          <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+            <input id="pass" placeholder="Пароль" type="password"
+              style="flex:1; min-width:220px; padding:12px 14px; border-radius:999px; border:1px solid rgba(244,243,238,.14); background:rgba(0,0,0,.22); color:var(--fg); outline:none;" />
+            <button id="loginBtn" class="btn btn--solid" type="button">Войти</button>
+          </div>
+          <p class="muted" style="margin-top:12px; font-size:12px">
+            Пароль по умолчанию: <b>kontora</b> (поменяешь в <code>admin.js</code>)
+          </p>
+        </div>
+      </div>
+
+      <div id="panel" style="display:none;">
+        <div class="filters" style="margin-top:0">
+          <button id="addBtn" class="chip is-active" type="button">+ Добавить товар</button>
+          <button id="clearBtn" class="chip" type="button">Очистить всё</button>
+          <a class="chip" href="index.html#catalog">Открыть каталог</a>
+        </div>
+
+        <div id="tableWrap" class="contactCard" style="padding:0; overflow:hidden;">
+          <div style="overflow:auto;">
+            <table style="width:100%; border-collapse:collapse; min-width:920px;">
+              <thead>
+                <tr style="background:rgba(244,243,238,.04); border-bottom:1px solid rgba(244,243,238,.10);">
+                  <th style="text-align:left; padding:12px 14px;">ID</th>
+                  <th style="text-align:left; padding:12px 14px;">Название</th>
+                  <th style="text-align:left; padding:12px 14px;">Цена</th>
+                  <th style="text-align:left; padding:12px 14px;">Категория</th>
+                  <th style="text-align:left; padding:12px 14px;">Картинка (URL/путь)</th>
+                  <th style="text-align:left; padding:12px 14px;">Теги (через запятую)</th>
+                  <th style="text-align:left; padding:12px 14px;">Описание</th>
+                  <th style="text-align:left; padding:12px 14px;">—</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="muted" style="margin-top:14px; font-size:12px;">
+          Совет: если хочешь, чтобы “правки были в репозитории”, жми “Экспорт JSON” и замени <code>catalog.json</code> в Git.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
