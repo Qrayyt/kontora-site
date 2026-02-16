@@ -1,104 +1,63 @@
-const LS_KEY = "kontora.catalog.override.v1";
+import { loadCatalog, clearLocalOverride } from "./catalog-store.js";
 
-const fmtPrice = (n, currency="₽") => {
-  try {
-    return new Intl.NumberFormat("ru-RU").format(n) + " " + currency;
-  } catch {
-    return `${n} ${currency}`;
-  }
-};
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-async function loadCatalog() {
-  const res = await fetch("catalog.json", { cache: "no-store" });
-  const base = await res.json();
+const fmtPrice = (n, currency = "₽") => new Intl.NumberFormat("ru-RU").format(n) + " " + currency;
 
-  // локальные правки из админки (если есть)
-  const overrideRaw = localStorage.getItem(LS_KEY);
-  if (overrideRaw) {
-    try {
-      const override = JSON.parse(overrideRaw);
-      if (override && Array.isArray(override.items)) return override;
-    } catch {}
-  }
-  return base;
+const escapeHtml = (s = "") => String(s)
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+
+const escapeAttr = (s = "") => escapeHtml(s).replaceAll("\n", " ");
+
+function cardTemplate(item, currency, idx = 0) {
+  const tags = (item.tags || []).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("");
+  return `<article class="card reveal" data-category="${escapeAttr(item.category || "all")}" data-id="${escapeAttr(item.id)}" style="--delay:${Math.min(idx * 70, 560)}ms">
+    <div class="card__media"><img class="card__img" src="${escapeAttr(item.image)}" alt="${escapeAttr(item.title)}" loading="lazy" /></div>
+    <div class="card__body">
+      <div class="card__top"><h3 class="card__name">${escapeHtml(item.title)}</h3><div class="card__price">${fmtPrice(item.price, currency)}</div></div>
+      <p class="card__desc">${escapeHtml(item.desc || "")}</p>
+      <div class="card__tags">${tags}</div>
+      <div class="card__cta"><button class="card__btn card__btn--accent" data-action="buy" type="button">Хочу →</button><button class="card__btn" data-action="details" type="button">Спеки</button></div>
+    </div>
+  </article>`;
 }
 
-function cardTemplate(item, currency) {
-  const tags = (item.tags || []).slice(0, 4).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("");
-  return `
-    <article class="card" data-category="${escapeAttr(item.category || "all")}" data-id="${escapeAttr(item.id)}">
-      <div class="card__media">
-        <img class="card__img" src="${escapeAttr(item.image)}" alt="${escapeAttr(item.title)}" loading="lazy" />
-      </div>
-      <div class="card__body">
-        <div class="card__top">
-          <h3 class="card__name">${escapeHtml(item.title)}</h3>
-          <div class="card__price">${fmtPrice(item.price, currency)}</div>
-        </div>
-        <p class="card__desc">${escapeHtml(item.desc || "")}</p>
-        <div class="card__tags">${tags}</div>
-        <div class="card__cta">
-          <button class="card__btn card__btn--accent" type="button" data-action="buy">Хочу →</button>
-          <button class="card__btn" type="button" data-action="details">Спеки</button>
-        </div>
-      </div>
-    </article>
-  `;
-}
+function bindFilters(catalog) {
+  const wrap = document.getElementById("filters");
+  const categories = ["all", ...new Set(catalog.items.map((i) => i.category || "other"))];
+  wrap.innerHTML = categories.map((c, i) => `<button class="chip ${i === 0 ? "is-active" : ""}" data-filter="${escapeAttr(c)}" type="button">${c === "all" ? "Все" : escapeHtml(c)}</button>`).join("");
 
-function escapeHtml(s="") {
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function escapeAttr(s="") { return escapeHtml(s).replaceAll("\n"," "); }
-
-function bindFilters() {
-  const chips = document.querySelectorAll(".chip");
-  const grid = document.getElementById("catalogGrid");
-
-  const setActive = (btn) => {
-    chips.forEach(c => c.classList.toggle("is-active", c === btn));
-  };
-
-  chips.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const f = btn.dataset.filter || "all";
-      setActive(btn);
-      [...grid.children].forEach(card => {
-        const cat = card.getAttribute("data-category") || "all";
-        const show = f === "all" || cat === f;
-        card.style.display = show ? "" : "none";
-      });
+  const chips = wrap.querySelectorAll(".chip");
+  chips.forEach((btn) => btn.addEventListener("click", () => {
+    chips.forEach((c) => c.classList.toggle("is-active", c === btn));
+    const filter = btn.dataset.filter;
+    document.querySelectorAll("#catalogGrid .card").forEach((card) => {
+      const show = filter === "all" || card.dataset.category === filter;
+      card.style.display = show ? "" : "none";
+      if (show && !card.classList.contains("is-visible")) {
+        requestAnimationFrame(() => card.classList.add("is-visible"));
+      }
     });
-  });
+  }));
 }
 
 function bindCardActions(catalog) {
-  const grid = document.getElementById("catalogGrid");
-  grid.addEventListener("click", (e) => {
+  document.getElementById("catalogGrid").addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-action]");
-    if (!btn) return;
-
     const card = e.target.closest(".card");
-    if (!card) return;
-
-    const id = card.getAttribute("data-id");
-    const item = catalog.items.find(x => String(x.id) === String(id));
+    if (!btn || !card) return;
+    const item = catalog.items.find((x) => String(x.id) === card.dataset.id);
     if (!item) return;
 
-    const action = btn.dataset.action;
-
-    if (action === "details") {
-      const tags = (item.tags || []).join(" • ");
-      alert(`${item.title}\n\n${item.desc || ""}\n\n${tags}`);
+    if (btn.dataset.action === "details") {
+      alert(`${item.title}\n\n${item.desc || ""}\n\n${(item.tags || []).join(" • ")}`);
     }
 
-    if (action === "buy") {
-      // пока без формы — просто якорь на контакты
+    if (btn.dataset.action === "buy") {
       location.hash = "#contacts";
     }
   });
@@ -106,44 +65,89 @@ function bindCardActions(catalog) {
 
 function heroParallax() {
   const img = document.getElementById("heroProduct");
-  if (!img) return;
+  if (!img || prefersReducedMotion || window.matchMedia("(max-width: 900px)").matches) return;
 
-  let mx = 0, my = 0, tx = 0, ty = 0;
+  let mx = 0;
+  let my = 0;
+  let tx = 0;
+  let ty = 0;
 
-  const onMove = (e) => {
-    const x = (e.clientX / window.innerWidth) * 2 - 1;
-    const y = (e.clientY / window.innerHeight) * 2 - 1;
-    mx = x; my = y;
-  };
-  window.addEventListener("pointermove", onMove, { passive: true });
+  window.addEventListener("pointermove", (e) => {
+    mx = (e.clientX / window.innerWidth) * 2 - 1;
+    my = (e.clientY / window.innerHeight) * 2 - 1;
+  }, { passive: true });
 
   const tick = () => {
     tx += (mx - tx) * 0.06;
     ty += (my - ty) * 0.06;
-    img.style.transform = `translate3d(${tx * 12}px, ${ty * 10}px, 0) rotateX(${(-ty) * 4}deg) rotateY(${tx * 6}deg)`;
+    img.style.transform = `translate3d(${tx * 16}px, ${ty * 14}px, 0) rotateX(${(-ty) * 5}deg) rotateY(${tx * 8}deg)`;
     requestAnimationFrame(tick);
   };
+
   tick();
 }
 
-function resetOverride() {
-  const btn = document.getElementById("resetCatalog");
-  if (!btn) return;
-  btn.addEventListener("click", () => {
-    localStorage.removeItem(LS_KEY);
-    location.reload();
+function setupScrollReveal() {
+  const nodes = document.querySelectorAll(".reveal");
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    nodes.forEach((n) => n.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+
+  nodes.forEach((n) => observer.observe(n));
+}
+
+function setupTopbar() {
+  const bar = document.querySelector(".topbar");
+  if (!bar) return;
+  const update = () => bar.classList.toggle("topbar--scrolled", window.scrollY > 20);
+  update();
+  window.addEventListener("scroll", update, { passive: true });
+}
+
+function playIntro() {
+  const body = document.body;
+  if (prefersReducedMotion) {
+    body.classList.remove("is-loading");
+    body.classList.add("is-ready");
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    body.classList.add("is-ready");
+    setTimeout(() => {
+      body.classList.remove("is-loading");
+      const intro = document.getElementById("intro");
+      if (intro) intro.setAttribute("aria-hidden", "true");
+    }, 1250);
   });
 }
 
 (async function init() {
   document.getElementById("year").textContent = new Date().getFullYear();
-
   const catalog = await loadCatalog();
-  const grid = document.getElementById("catalogGrid");
-  grid.innerHTML = catalog.items.map(i => cardTemplate(i, catalog.currency || "₽")).join("");
 
-  bindFilters();
+  const grid = document.getElementById("catalogGrid");
+  grid.innerHTML = catalog.items.map((i, idx) => cardTemplate(i, catalog.currency || "₽", idx)).join("");
+
+  bindFilters(catalog);
   bindCardActions(catalog);
   heroParallax();
-  resetOverride();
+  setupTopbar();
+  setupScrollReveal();
+  playIntro();
+
+  document.getElementById("resetCatalog").addEventListener("click", () => {
+    clearLocalOverride();
+    location.reload();
+  });
 })();

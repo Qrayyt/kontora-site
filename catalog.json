@@ -6,8 +6,8 @@
       "title": "KONTORA / Gaming S",
       "price": 149990,
       "category": "gaming",
-      "image": "assets/pc-placeholder.png",
-      "desc": "1440p ультра, тихий корпус, нормальный airflow. Без «светомузыки», если не хочешь.",
+      "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
+      "desc": "1440p ультра, тихий корпус, нормальный airflow. Без светомузыки, если не хочешь.",
       "tags": ["RTX", "32GB RAM", "1TB NVMe"]
     },
     {
@@ -15,7 +15,7 @@
       "title": "KONTORA / Creator",
       "price": 219990,
       "category": "creator",
-      "image": "assets/pc-placeholder.png",
+      "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
       "desc": "Монтаж, 3D, нейронки — стабильная машина без сюрпризов.",
       "tags": ["CUDA", "64GB RAM", "2TB NVMe"]
     },
@@ -24,7 +24,7 @@
       "title": "KONTORA / Work",
       "price": 99990,
       "category": "work",
-      "image": "assets/pc-placeholder.png",
+      "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
       "desc": "Офис/код/многозадачность. Быстро, аккуратно, без переплаты.",
       "tags": ["тихий", "быстрый SSD", "гарантия"]
     },
@@ -33,7 +33,7 @@
       "title": "KONTORA / Budget",
       "price": 69990,
       "category": "budget",
-      "image": "assets/pc-placeholder.png",
+      "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
       "desc": "База для апгрейда. Стартануть и потом спокойно докинуть мощи.",
       "tags": ["апгрейд", "1080p", "доставка"]
     }
