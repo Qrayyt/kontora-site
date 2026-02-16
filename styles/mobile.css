@@ -1,0 +1,14 @@
+:root{--pad:16px;--radius:18px}
+.topbar{padding:14px var(--pad)}
+.nav{gap:10px;font-size:13px}
+.nav__ghost{display:none}
+.hero{min-height:auto;padding-top:76px}
+.hero__bgtype{top:8vh;font-size:clamp(56px, 24vw, 120px)}
+.hero__center{grid-template-columns:1fr;padding:5vh 0 6vh;gap:22px}
+.hero__title{font-size:clamp(30px, 9vw, 42px)}
+.section{padding:62px 0}
+.section__head{grid-template-columns:1fr}
+.section__actions{justify-content:flex-start;flex-wrap:wrap}
+.card,.contactCard{grid-column:span 12}
+.card__media{height:200px}
+.footer{flex-direction:column;gap:8px}

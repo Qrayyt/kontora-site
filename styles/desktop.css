@@ -1,0 +1,6 @@
+.hero__center{grid-template-columns:1.05fr .95fr}
+.section__head{grid-template-columns:1fr auto}
+.card{grid-column:span 4}
+.contactCard{grid-column:span 4}
+.card:hover{transform:translateY(-6px);border-color:rgba(244,243,238,.20);box-shadow:var(--shadow)}
+.card:hover .card__img{transform:scale(1.06)}

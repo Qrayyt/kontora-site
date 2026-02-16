@@ -8,131 +8,76 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/desktop.css" media="(min-width: 901px)" />
+  <link rel="stylesheet" href="styles/mobile.css" media="(max-width: 900px)" />
 </head>
 <body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="glow glow--a" aria-hidden="true"></div>
+  <div class="glow glow--b" aria-hidden="true"></div>
 
-<header class="topbar">
-  <a class="brand" href="#">
-    <span class="brand__dot">.</span><span class="brand__name">kontora</span>
-  </a>
-  <nav class="nav">
-    <a href="#catalog">Каталог</a>
-    <a href="#contacts">Контакты</a>
-  </nav>
-</header>
+  <header class="topbar">
+    <a class="brand" href="#hero">
+      <span class="brand__dot">.</span><span class="brand__name">kontora</span>
+    </a>
+    <nav class="nav">
+      <a href="#catalog">Каталог</a>
+      <a href="#contacts">Контакты</a>
+      <a class="nav__ghost" href="admin/">Admin</a>
+    </nav>
+  </header>
 
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero__grid">
-      <div class="hero__bgtype">.kontora</div>
-
-      <div class="hero__center">
-        <!-- ТВОЙ PNG -->
-        <img
-          id="heroProduct"
-          class="hero__product"
-          src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png"
-          alt="Мощный игровой ПК"
-          draggable="false"
-        />
-
-        <div class="hero__text">
-          <h1 class="hero__title">
-            Мощные ПК<br>
-            <span class="hero__accent">без компромиссов</span>
-          </h1>
-          <p class="hero__subtitle">
-            Белые сборки. RGB. Тишина и производительность.
-            Собираем так, как себе.
-          </p>
-
-          <div class="hero__cta">
-            <a class="btn btn--solid" href="#catalog">Каталог</a>
-            <a class="btn btn--ghost" href="#contacts">Заказать сборку</a>
+  <main>
+    <section id="hero" class="hero">
+      <div class="hero__grid">
+        <div class="hero__bgtype">.kontora</div>
+        <div class="hero__center">
+          <img id="heroProduct" class="hero__product" src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png" alt="Мощный игровой ПК" draggable="false" />
+          <div class="hero__text">
+            <h1 class="hero__title">Мощные ПК<br><span class="hero__accent">без компромиссов</span></h1>
+            <p class="hero__subtitle">Белые сборки. RGB. Тишина и производительность. Собираем так, как себе.</p>
+            <div class="hero__cta">
+              <a class="btn btn--solid" href="#catalog">Каталог</a>
+              <a class="btn btn--ghost" href="#contacts">Заказать сборку</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CATALOG -->
-  <section id="catalog" class="section">
-    <div class="section__head">
-      <h2 class="section__title">Каталог</h2>
-      <p class="section__desc">
-        Готовые конфиги. Можно кастомить.
-      </p>
-    </div>
-
-    <div class="grid">
-      <!-- CARD -->
-      <article class="card">
-        <div class="card__media">
-          <img
-            class="card__img"
-            src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png"
-            alt="Gaming PC"
-          />
+    <section id="catalog" class="section">
+      <div class="section__head">
+        <div>
+          <h2 class="section__title">Каталог</h2>
+          <p class="section__desc">Полностью управляется через admin-панель. Изменения можно хранить локально или в Firebase.</p>
         </div>
-        <div class="card__body">
-          <div class="card__top">
-            <h3 class="card__name">KONTORA / Gaming Pro</h3>
-            <div class="card__price">249 990 ₽</div>
-          </div>
-          <p class="card__desc">
-            4K, RTX, водянка, тишина. Максимум FPS без колхоза.
-          </p>
-          <div class="card__tags">
-            <span class="tag">RTX</span>
-            <span class="tag">64 GB RAM</span>
-            <span class="tag">2 TB NVMe</span>
-          </div>
-        </div>
-      </article>
+        <div class="section__actions"><button id="resetCatalog" class="mini" type="button">Сбросить локальные правки</button></div>
+      </div>
 
-      <!-- CARD -->
-      <article class="card">
-        <div class="card__media">
-          <img
-            class="card__img"
-            src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png"
-            alt="Creator PC"
-          />
-        </div>
-        <div class="card__body">
-          <div class="card__top">
-            <h3 class="card__name">KONTORA / Creator</h3>
-            <div class="card__price">289 990 ₽</div>
-          </div>
-          <p class="card__desc">
-            Монтаж, 3D, нейросети. Рабочая станция без боли.
-          </p>
-          <div class="card__tags">
-            <span class="tag">CUDA</span>
-            <span class="tag">128 GB RAM</span>
-            <span class="tag">Watercooling</span>
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>
+      <div class="filters" id="filters"></div>
+      <div id="catalogGrid" class="grid"></div>
+    </section>
 
-  <!-- CONTACTS -->
-  <section id="contacts" class="section">
-    <div class="section__head">
-      <h2 class="section__title">Контакты</h2>
-      <p class="section__desc">
-        Напиши — соберём конфиг под твои задачи.
-      </p>
-    </div>
+    <section id="contacts" class="section section--contacts">
+      <div class="section__head">
+        <h2 class="section__title">Контакты</h2>
+      </div>
+      <div class="contacts">
+        <div class="contactCard"><div class="contactCard__title">Telegram</div><div class="contactCard__body">@kontora</div></div>
+        <div class="contactCard"><div class="contactCard__title">Email</div><div class="contactCard__body">hello@kontora.ru</div></div>
+        <div class="contactCard"><div class="contactCard__title">Admin</div><div class="contactCard__body"><a href="admin/">Открыть панель управления</a></div></div>
+      </div>
+      <footer class="footer">
+        <span>© <span id="year"></span> .kontora</span>
+        <span class="muted">Надёжные сборки с гарантией</span>
+      </footer>
+    </section>
+  </main>
 
-    <p>Telegram: @kontora</p>
-    <p>Email: hello@kontora.ru</p>
-  </section>
-</main>
-
-<script src="app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+  <script defer src="firebase-init.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
