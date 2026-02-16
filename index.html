@@ -4,131 +4,135 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>.kontora — ПК на заказ</title>
-  <meta name="description" content="Продажа и сборка ПК. Каталог готовых конфигов.">
+  <meta name="description" content="Продажа и сборка мощных ПК. Готовые конфиги и кастомные сборки.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="noise" aria-hidden="true"></div>
-  <div class="glow glow--a" aria-hidden="true"></div>
-  <div class="glow glow--b" aria-hidden="true"></div>
 
-  <header class="topbar">
-    <a class="brand" href="#top" aria-label="kontora">
-      <span class="brand__dot">.</span><span class="brand__name">kontora</span>
-    </a>
-    <nav class="nav">
-      <a href="#catalog">Каталог</a>
-      <a href="#contacts">Контакты</a>
-      <a class="nav__ghost" href="admin.html">Admin</a>
-    </nav>
-  </header>
+<header class="topbar">
+  <a class="brand" href="#">
+    <span class="brand__dot">.</span><span class="brand__name">kontora</span>
+  </a>
+  <nav class="nav">
+    <a href="#catalog">Каталог</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+</header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero__grid">
-        <div class="hero__bgtype" aria-hidden="true">.kontora</div>
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__grid">
+      <div class="hero__bgtype">.kontora</div>
 
-        <div class="hero__center">
-          <!-- СЮДА ТЫ ПОТОМ ВСТАВИШЬ СВОЙ PNG -->
+      <div class="hero__center">
+        <!-- ТВОЙ PNG -->
+        <img
+          id="heroProduct"
+          class="hero__product"
+          src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png"
+          alt="Мощный игровой ПК"
+          draggable="false"
+        />
+
+        <div class="hero__text">
+          <h1 class="hero__title">
+            Мощные ПК<br>
+            <span class="hero__accent">без компромиссов</span>
+          </h1>
+          <p class="hero__subtitle">
+            Белые сборки. RGB. Тишина и производительность.
+            Собираем так, как себе.
+          </p>
+
+          <div class="hero__cta">
+            <a class="btn btn--solid" href="#catalog">Каталог</a>
+            <a class="btn btn--ghost" href="#contacts">Заказать сборку</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATALOG -->
+  <section id="catalog" class="section">
+    <div class="section__head">
+      <h2 class="section__title">Каталог</h2>
+      <p class="section__desc">
+        Готовые конфиги. Можно кастомить.
+      </p>
+    </div>
+
+    <div class="grid">
+      <!-- CARD -->
+      <article class="card">
+        <div class="card__media">
           <img
-            id="heroProduct"
-            class="hero__product"
-            src="assets/pc-placeholder.png"
-            alt="Компьютер"
-            draggable="false"
+            class="card__img"
+            src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png"
+            alt="Gaming PC"
           />
-
-          <div class="hero__text">
-            <h1 class="hero__title">
-              Сборки, которые выглядят и <span class="hero__accent">жарят</span>.
-            </h1>
-            <p class="hero__subtitle">
-              Минимализм с характером. Готовые конфиги и сборка под тебя.
-            </p>
-            <div class="hero__cta">
-              <a class="btn btn--solid" href="#catalog">Смотреть каталог</a>
-              <a class="btn btn--ghost" href="#contacts">Написать нам</a>
-            </div>
-            <div class="hero__meta">
-              <span class="pill">Гарантия • Тесты • Кабель-менеджмент</span>
-              <span class="pill pill--soft">Москва/РФ • Доставка</span>
-            </div>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h3 class="card__name">KONTORA / Gaming Pro</h3>
+            <div class="card__price">249 990 ₽</div>
+          </div>
+          <p class="card__desc">
+            4K, RTX, водянка, тишина. Максимум FPS без колхоза.
+          </p>
+          <div class="card__tags">
+            <span class="tag">RTX</span>
+            <span class="tag">64 GB RAM</span>
+            <span class="tag">2 TB NVMe</span>
           </div>
         </div>
+      </article>
 
-        <div class="hero__scrollhint">
-          <span class="scrollhint__line"></span>
-          <span class="scrollhint__text">листай</span>
+      <!-- CARD -->
+      <article class="card">
+        <div class="card__media">
+          <img
+            class="card__img"
+            src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png"
+            alt="Creator PC"
+          />
         </div>
-      </div>
-    </section>
-
-    <section id="catalog" class="section">
-      <div class="section__head">
-        <h2 class="section__title">Каталог</h2>
-        <p class="section__desc">Живые карточки, нормальные спеки, без лишнего мусора.</p>
-        <div class="section__actions">
-          <button id="resetCatalog" class="mini" type="button" title="Сбросить локальные правки каталога">
-            Сбросить правки
-          </button>
-          <a class="mini" href="admin.html" title="Панель редактирования каталога">Редактировать →</a>
-        </div>
-      </div>
-
-      <div class="filters" aria-label="Фильтры каталога">
-        <button class="chip is-active" data-filter="all" type="button">Все</button>
-        <button class="chip" data-filter="gaming" type="button">Gaming</button>
-        <button class="chip" data-filter="work" type="button">Work</button>
-        <button class="chip" data-filter="creator" type="button">Creator</button>
-        <button class="chip" data-filter="budget" type="button">Budget</button>
-      </div>
-
-      <div id="catalogGrid" class="grid"></div>
-    </section>
-
-    <section id="contacts" class="section section--contacts">
-      <div class="section__head">
-        <h2 class="section__title">Контакты</h2>
-        <p class="section__desc">Оставили место — сюда потом нормально вставим телефоны/соцсети/форму.</p>
-      </div>
-
-      <div class="contacts">
-        <div class="contactCard">
-          <div class="contactCard__title">Связь</div>
-          <div class="contactCard__body">
-            <p><span class="muted">Telegram:</span> @kontora</p>
-            <p><span class="muted">WhatsApp:</span> +7 (000) 000-00-00</p>
-            <p><span class="muted">Email:</span> hello@kontora.ru</p>
+        <div class="card__body">
+          <div class="card__top">
+            <h3 class="card__name">KONTORA / Creator</h3>
+            <div class="card__price">289 990 ₽</div>
+          </div>
+          <p class="card__desc">
+            Монтаж, 3D, нейросети. Рабочая станция без боли.
+          </p>
+          <div class="card__tags">
+            <span class="tag">CUDA</span>
+            <span class="tag">128 GB RAM</span>
+            <span class="tag">Watercooling</span>
           </div>
         </div>
+      </article>
+    </div>
+  </section>
 
-        <div class="contactCard">
-          <div class="contactCard__title">Адрес</div>
-          <div class="contactCard__body">
-            <p>Москва, где-то рядом</p>
-            <p class="muted">По желанию — покажем карту, график, как добраться.</p>
-          </div>
-        </div>
+  <!-- CONTACTS -->
+  <section id="contacts" class="section">
+    <div class="section__head">
+      <h2 class="section__title">Контакты</h2>
+      <p class="section__desc">
+        Напиши — соберём конфиг под твои задачи.
+      </p>
+    </div>
 
-        <div class="contactCard">
-          <div class="contactCard__title">Хочу сборку</div>
-          <div class="contactCard__body">
-            <a class="btn btn--solid" href="#">Оставить заявку</a>
-            <p class="muted" style="margin-top:12px;">(пока заглушка)</p>
-          </div>
-        </div>
-      </div>
+    <p>Telegram: @kontora</p>
+    <p>Email: hello@kontora.ru</p>
+  </section>
+</main>
 
-      <footer class="footer">
-        <span>© <span id="year"></span> .kontora</span>
-        <span class="muted">Сделано без кринжа.</span>
-      </footer>
-    </section>
-  </main>
-
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
