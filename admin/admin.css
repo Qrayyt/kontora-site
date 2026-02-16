@@ -1,3 +1,4 @@
+html,body{max-width:100%;overflow-x:clip;overscroll-behavior-x:none}
 .admin-main{padding-top:92px}
 .admin-section{border-top:none;padding-top:34px}
 .auth-card{max-width:560px}
@@ -11,4 +12,4 @@ th,td{padding:10px 12px;border-bottom:1px solid rgba(244,243,238,.08);text-align
 th{font-size:12px;color:var(--muted)}
 .admin-cell{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(244,243,238,.12);background:rgba(0,0,0,.18);color:rgba(244,243,238,.92)}
 .upload{cursor:pointer}
-@media (max-width:900px){.admin-main{padding-top:76px}.admin-section{padding-top:20px}}
+@media (max-width:900px){.admin-main{padding-top:76px}.admin-section{padding-top:20px}.admin-input,.admin-cell,button,input,select,textarea{font-size:16px}}

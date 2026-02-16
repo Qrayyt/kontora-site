@@ -1,0 +1,18 @@
+{
+  "name": ".kontora",
+  "short_name": "kontora",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0e0d0a",
+  "theme_color": "#0e0d0a",
+  "description": "Продажа и сборка мощных ПК. Готовые конфиги и кастомные сборки.",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

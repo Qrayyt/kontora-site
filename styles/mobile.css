@@ -1,4 +1,8 @@
 :root{--pad:16px;--radius:18px}
+
+html,body{max-width:100%;overflow-x:clip;overscroll-behavior-x:none}
+body{touch-action:pan-y pinch-zoom}
+input,select,textarea,button{font-size:16px}
 .topbar{padding:14px var(--pad)}
 .topbar--scrolled{padding:10px var(--pad)}
 .nav{gap:10px;font-size:13px}
