@@ -11,7 +11,9 @@
 *{box-sizing:border-box} html,body{margin:0;padding:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);scroll-behavior:smooth}
 a{text-decoration:none;color:inherit} img{display:block;max-width:100%}
 .topbar{position:fixed;inset:0 0 auto 0;height:72px;background:rgba(8,9,12,.78);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:40}
-.brand{font-weight:900;font-size:22px}.brand__dot{color:#fff}.nav{display:flex;gap:18px;color:var(--muted)}
+.brand{font-weight:900;font-size:22px}.brand__dot{color:#fff}.nav{display:flex;gap:12px;color:var(--muted);align-items:center;flex-wrap:wrap}
+
+.auth-pill{padding:8px 12px;font-size:12px;line-height:1.1;cursor:default}
 main{padding-top:72px}
 .hero{height:155vh;position:relative}.hero__sticky{position:sticky;top:72px;height:calc(100vh - 72px);display:grid;place-items:center;text-align:center;gap:10px;padding:20px}
 .hero__kicker{color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:12px}.hero h1{margin:0;font-size:clamp(48px,11vw,130px);line-height:.9}

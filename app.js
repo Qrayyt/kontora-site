@@ -1,5 +1,6 @@
 import { loadCatalog, clearLocalOverride } from "./catalog-store.js";
 
+const AUTH_KEY = "kontora.auth.ok";
 const fmtPrice = (n, currency = "₽") => new Intl.NumberFormat("ru-RU").format(n) + " " + currency;
 const esc = (s = "") => String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 
@@ -8,6 +9,30 @@ const reviews = [
   { name: "Игорь", date: "2 марта", text: "Сборка тихая, температуры хорошие, кабель-менеджмент топ.", avatar: "https://api.dicebear.com/9.x/initials/svg?seed=И" },
   { name: "Артур", date: "11 марта", text: "Забрал готовый ПК и через 10 минут уже играл. Рекомендую.", avatar: "https://api.dicebear.com/9.x/initials/svg?seed=А" }
 ];
+
+function syncAuthUi() {
+  const isAuthed = sessionStorage.getItem(AUTH_KEY) === "1";
+  const status = document.getElementById("authStatus");
+  const action = document.getElementById("authAction");
+  const adminLink = document.getElementById("adminLink");
+
+  status.textContent = `Профиль: ${isAuthed ? "выполнен" : "не выполнен"}`;
+  action.textContent = isAuthed ? "Выйти" : "Войти";
+  action.href = isAuthed ? "#" : "auth/";
+
+  action.onclick = (e) => {
+    if (!isAuthed) return;
+    e.preventDefault();
+    sessionStorage.removeItem(AUTH_KEY);
+    syncAuthUi();
+  };
+
+  adminLink.onclick = (e) => {
+    if (sessionStorage.getItem(AUTH_KEY) === "1") return;
+    e.preventDefault();
+    window.location.href = `auth/?next=${encodeURIComponent("admin/")}`;
+  };
+}
 
 function cardTemplate(item, currency) {
   return `<article class="card" data-id="${esc(item.id)}" data-category="${esc(item.category)}" style="--accent:${esc(item.accent || "#ffffff")}">
@@ -115,6 +140,7 @@ function setupHeroScroll() {
 }
 
 (async function init() {
+  syncAuthUi();
   document.getElementById("year").textContent = new Date().getFullYear();
   const catalog = await loadCatalog();
   document.getElementById("catalogGrid").innerHTML = catalog.items.map((item) => cardTemplate(item, catalog.currency)).join("");

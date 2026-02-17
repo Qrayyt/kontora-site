@@ -15,7 +15,11 @@
 <body>
   <header class="topbar">
     <a class="brand" href="../index.html"><span class="brand__dot">.</span>kontora admin</a>
-    <nav class="nav"><a href="../index.html">На сайт</a><a href="/auth/" id="logoutBtn">Выйти</a></nav>
+    <nav class="nav">
+      <span id="authStatus" class="mini auth-pill">Профиль: не выполнен</span>
+      <a href="../index.html">На сайт</a>
+      <a href="../auth/" id="logoutBtn">Выйти</a>
+    </nav>
   </header>
 
   <main class="admin-main">
@@ -23,7 +27,7 @@
       <div class="section__head">
         <div>
           <h2>Публикация витрины</h2>
-          <p>Интерфейс уровня «серьёзная организация»: каталог слева, полная форма редактирования справа.</p>
+          <p>Каталог слева, полная форма редактирования справа.</p>
         </div>
         <span id="syncState" class="mini"></span>
       </div>

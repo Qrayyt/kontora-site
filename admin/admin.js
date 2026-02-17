@@ -5,10 +5,21 @@ const $ = (id) => document.getElementById(id);
 let catalog;
 let activeId = null;
 
-if (sessionStorage.getItem(AUTH_KEY) !== "1") {
-  const next = encodeURIComponent("/admin/");
-  window.location.replace(`/auth/?next=${next}`);
+function getAuthUrl(nextPath = "../admin/") {
+  return `../auth/?next=${encodeURIComponent(nextPath)}`;
 }
+
+function ensureAuth() {
+  const isAuthed = sessionStorage.getItem(AUTH_KEY) === "1";
+  if (!isAuthed) {
+    window.location.replace(getAuthUrl("../admin/"));
+    return false;
+  }
+  $("authStatus").textContent = "Профиль: выполнен";
+  return true;
+}
+
+const AUTH_OK = ensureAuth();
 
 function uid() {
   return "id-" + Math.random().toString(16).slice(2, 7);
@@ -112,6 +123,7 @@ function downloadJson(data) {
 }
 
 (async function init() {
+  if (!AUTH_OK) return;
   $("syncState").textContent = `Firebase: ${getFirebaseStatus() ? "подключен" : "не настроен"}`;
   catalog = await loadCatalog();
   activeId = catalog.items[0]?.id || null;
@@ -167,6 +179,6 @@ function downloadJson(data) {
   $("logoutBtn").addEventListener("click", (e) => {
     e.preventDefault();
     sessionStorage.removeItem(AUTH_KEY);
-    window.location.href = "/auth/";
+    window.location.href = "../auth/";
   });
 })();

@@ -6,4 +6,6 @@
 .auth-form label{font-size:13px;color:#9ea4b4}
 .auth-form input,.auth-form button{height:46px;border-radius:12px;border:1px solid #313747;background:#121723;color:#f4f5f8;font:inherit;padding:0 12px}
 .auth-form button{background:linear-gradient(180deg,#f8f8f9,#d4d7df);color:#07080c;font-weight:700;cursor:pointer}
+.auth-actions{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:12px}
+.link-btn{background:none;border:none;color:#b8c0d3;cursor:pointer;padding:0}
 .error{color:#ff7f7f;margin-top:10px}.back{display:inline-block;margin-top:12px;color:#b8c0d3}
