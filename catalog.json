@@ -2,40 +2,70 @@
   "currency": "₽",
   "items": [
     {
-      "id": "k1",
-      "title": "KONTORA / Gaming S",
-      "price": 149990,
-      "category": "gaming",
+      "id": "pc-01",
+      "title": "KONTORA Pulse RGB",
+      "price": 164990,
+      "category": "ready-pc",
       "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
-      "desc": "1440p ультра, тихий корпус, нормальный airflow. Без светомузыки, если не хочешь.",
-      "tags": ["RTX", "32GB RAM", "1TB NVMe"]
+      "desc": "Готовый игровой ПК с чистой сборкой и аккуратной подсветкой.",
+      "tags": ["RTX 4070", "32GB DDR5", "1TB NVMe"],
+      "accent": "#52a8ff",
+      "specs": [
+        { "label": "CPU", "value": "Ryzen 7 7700" },
+        { "label": "GPU", "value": "RTX 4070" },
+        { "label": "RAM", "value": "32GB DDR5" },
+        { "label": "SSD", "value": "1TB NVMe" },
+        { "label": "Охлаждение", "value": "360mm AIO" },
+        { "label": "Гарантия", "value": "12 мес" }
+      ]
     },
     {
-      "id": "k2",
-      "title": "KONTORA / Creator",
+      "id": "pc-02",
+      "title": "KONTORA Shadow White",
       "price": 219990,
-      "category": "creator",
+      "category": "ready-pc",
       "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
-      "desc": "Монтаж, 3D, нейронки — стабильная машина без сюрпризов.",
-      "tags": ["CUDA", "64GB RAM", "2TB NVMe"]
+      "desc": "Белая тихая сборка для игр, монтажа и стриминга.",
+      "tags": ["RTX 4080 Super", "64GB DDR5", "2TB NVMe"],
+      "accent": "#f5f5f5",
+      "specs": [
+        { "label": "CPU", "value": "Ryzen 9 7900" },
+        { "label": "GPU", "value": "RTX 4080S" },
+        { "label": "RAM", "value": "64GB DDR5" },
+        { "label": "SSD", "value": "2TB NVMe" },
+        { "label": "БП", "value": "1000W Gold" },
+        { "label": "Гарантия", "value": "12 мес" }
+      ]
     },
     {
-      "id": "k3",
-      "title": "KONTORA / Work",
-      "price": 99990,
-      "category": "work",
+      "id": "cp-01",
+      "title": "Комплект апгрейда DDR5",
+      "price": 28990,
+      "category": "components",
       "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
-      "desc": "Офис/код/многозадачность. Быстро, аккуратно, без переплаты.",
-      "tags": ["тихий", "быстрый SSD", "гарантия"]
+      "desc": "Материнская плата + память + охлаждение под быстрый апгрейд.",
+      "tags": ["B650", "32GB", "ARGB"],
+      "accent": "#7ee787",
+      "specs": [
+        { "label": "Плата", "value": "B650 ATX" },
+        { "label": "Память", "value": "32GB DDR5" },
+        { "label": "Кулер", "value": "Tower 220W" }
+      ]
     },
     {
-      "id": "k4",
-      "title": "KONTORA / Budget",
-      "price": 69990,
-      "category": "budget",
+      "id": "cp-02",
+      "title": "Периферия Stream Pack",
+      "price": 17990,
+      "category": "components",
       "image": "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
-      "desc": "База для апгрейда. Стартануть и потом спокойно докинуть мощи.",
-      "tags": ["апгрейд", "1080p", "доставка"]
+      "desc": "Мышь, клавиатура и гарнитура в одном комплекте.",
+      "tags": ["механика", "7.1", "low latency"],
+      "accent": "#ffcc00",
+      "specs": [
+        { "label": "Клавиатура", "value": "TKL Red" },
+        { "label": "Мышь", "value": "26K DPI" },
+        { "label": "Гарнитура", "value": "7.1 USB" }
+      ]
     }
   ]
 }

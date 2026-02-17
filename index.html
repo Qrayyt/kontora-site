@@ -3,89 +3,73 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,viewport-fit=cover,user-scalable=yes" />
-  <meta name="theme-color" content="#0e0d0a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="kontora" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <title>.kontora — ПК на заказ</title>
-  <meta name="description" content="Продажа и сборка мощных ПК. Готовые конфиги и кастомные сборки.">
+  <meta name="theme-color" content="#08090c" />
+  <title>.kontora — визитка-витрина ПК</title>
+  <meta name="description" content="Тёмная витрина: готовые компьютеры и комплектующие. Быстрый выход на контакты и удобное управление каталогом." />
   <link rel="manifest" href="/site.webmanifest" />
-  <link rel="apple-touch-icon" href="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/base.css" />
   <link rel="stylesheet" href="styles/desktop.css" media="(min-width: 901px)" />
   <link rel="stylesheet" href="styles/mobile.css" media="(max-width: 900px)" />
 </head>
-<body class="is-loading">
-  <div class="intro" id="intro" aria-hidden="true">
-    <div class="intro__brand"><span class="brand__dot">.</span>kontora</div>
-    <div class="intro__line"></div>
-  </div>
-
-  <div class="noise" aria-hidden="true"></div>
-  <div class="glow glow--a" aria-hidden="true"></div>
-  <div class="glow glow--b" aria-hidden="true"></div>
-
+<body>
   <header class="topbar">
-    <a class="brand" href="#hero">
-      <span class="brand__dot">.</span><span class="brand__name">kontora</span>
-    </a>
+    <a class="brand" href="#hero"><span class="brand__dot">.</span>kontora</a>
     <nav class="nav">
       <a href="#catalog">Каталог</a>
-      <a href="#contacts">Контакты</a>
-      <a class="nav__ghost" href="admin/">Admin</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="admin/">Админ</a>
     </nav>
   </header>
 
+  <a class="contact-fab" href="#contacts">Контакты</a>
+
   <main>
     <section id="hero" class="hero">
-      <div class="hero__grid">
-        <div class="hero__bgtype" data-animate="hero-bg">.kontora</div>
-        <div class="hero__center">
-          <img id="heroProduct" class="hero__product" src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png" alt="Мощный игровой ПК" draggable="false" />
-          <div class="hero__text">
-            <h1 class="hero__title" data-animate="hero-title">Мощные ПК<br><span class="hero__accent">без компромиссов</span></h1>
-            <p class="hero__subtitle" data-animate="hero-subtitle">Белые сборки. RGB. Тишина и производительность. Собираем так, как себе.</p>
-            <div class="hero__cta" data-animate="hero-cta">
-              <a class="btn btn--solid" href="#catalog">Каталог</a>
-              <a class="btn btn--ghost" href="#contacts">Заказать сборку</a>
-            </div>
-          </div>
-        </div>
+      <div class="hero__sticky">
+        <p class="hero__kicker">Визитка-витрина</p>
+        <h1><span class="hero__line">KONTORA</span><span class="hero__line hero__line--muted">est.2019</span></h1>
+        <p class="hero__lead">Простая тёмная витрина: люди смотрят сборки, выбирают и сразу выходят на связь.</p>
+        <img id="heroPc" class="hero__pc" src="https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png" alt="Компьютер KONTORA" draggable="false" />
       </div>
     </section>
 
-    <section id="catalog" class="section reveal">
+    <section id="catalog" class="section">
       <div class="section__head">
         <div>
-          <h2 class="section__title">Каталог</h2>
-          <p class="section__desc">Полностью управляется через admin-панель. Изменения можно хранить локально или в Firebase.</p>
+          <h2>Каталог</h2>
+          <p>Две категории без корзины: готовые компьютеры и комплектующие/периферия.</p>
         </div>
-        <div class="section__actions"><button id="resetCatalog" class="mini" type="button">Сбросить локальные правки</button></div>
+        <button id="resetCatalog" class="mini" type="button">Сбросить локальные правки</button>
       </div>
-
-      <div class="filters" id="filters"></div>
+      <div id="filters" class="filters"></div>
       <div id="catalogGrid" class="grid"></div>
     </section>
 
-    <section id="contacts" class="section section--contacts reveal">
-      <div class="section__head">
-        <h2 class="section__title">Контакты</h2>
+    <section id="reviews" class="section">
+      <div class="section__head"><h2>Отзывы клиентов</h2></div>
+      <div class="reviews-marquee">
+        <div class="reviews-track" id="reviewsTrack"></div>
       </div>
-      <div class="contacts">
-        <div class="contactCard reveal"><div class="contactCard__title">Telegram</div><div class="contactCard__body">@kontora</div></div>
-        <div class="contactCard reveal"><div class="contactCard__title">Email</div><div class="contactCard__body">hello@kontora.ru</div></div>
-        <div class="contactCard reveal"><div class="contactCard__title">Admin</div><div class="contactCard__body"><a href="admin/">Открыть панель управления</a></div></div>
+    </section>
+
+    <section id="contacts" class="section">
+      <div class="section__head"><h2>Контакты</h2></div>
+      <div class="contacts-grid">
+        <a class="contact-card" href="tel:+79990000000"><span>Телефон</span><b>+7 (999) 000-00-00</b></a>
+        <a class="contact-card" href="https://t.me/kontora" target="_blank" rel="noreferrer"><span>Telegram</span><b>@kontora</b></a>
+        <a class="contact-card" href="https://wa.me/79990000000" target="_blank" rel="noreferrer"><span>WhatsApp</span><b>Написать</b></a>
       </div>
-      <footer class="footer">
-        <span>© <span id="year"></span> .kontora</span>
-        <span class="muted">Надёжные сборки с гарантией</span>
-      </footer>
+      <footer>© <span id="year"></span> .kontora</footer>
     </section>
   </main>
+
+  <dialog id="detailsModal" class="modal">
+    <button id="closeModal" class="modal__close" type="button">✕</button>
+    <div id="modalContent"></div>
+  </dialog>
 
   <script defer src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>

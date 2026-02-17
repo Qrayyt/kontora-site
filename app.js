@@ -1,153 +1,110 @@
 import { loadCatalog, clearLocalOverride } from "./catalog-store.js";
 
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 const fmtPrice = (n, currency = "₽") => new Intl.NumberFormat("ru-RU").format(n) + " " + currency;
+const esc = (s = "") => String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 
-const escapeHtml = (s = "") => String(s)
-  .replaceAll("&", "&amp;")
-  .replaceAll("<", "&lt;")
-  .replaceAll(">", "&gt;")
-  .replaceAll('"', "&quot;")
-  .replaceAll("'", "&#039;");
+const reviews = [
+  { name: "Тимофей", date: "13 февраля", text: "Сделка состоялась. Корпус отличный, всё как на фото.", avatar: "https://api.dicebear.com/9.x/initials/svg?seed=Т" },
+  { name: "Игорь", date: "2 марта", text: "Сборка тихая, температуры хорошие, кабель-менеджмент топ.", avatar: "https://api.dicebear.com/9.x/initials/svg?seed=И" },
+  { name: "Артур", date: "11 марта", text: "Забрал готовый ПК и через 10 минут уже играл. Рекомендую.", avatar: "https://api.dicebear.com/9.x/initials/svg?seed=А" }
+];
 
-const escapeAttr = (s = "") => escapeHtml(s).replaceAll("\n", " ");
-
-function cardTemplate(item, currency, idx = 0) {
-  const tags = (item.tags || []).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("");
-  return `<article class="card reveal" data-category="${escapeAttr(item.category || "all")}" data-id="${escapeAttr(item.id)}" style="--delay:${Math.min(idx * 70, 560)}ms">
-    <div class="card__media"><img class="card__img" src="${escapeAttr(item.image)}" alt="${escapeAttr(item.title)}" loading="lazy" /></div>
+function cardTemplate(item, currency) {
+  return `<article class="card" data-id="${esc(item.id)}" data-category="${esc(item.category)}" style="--accent:${esc(item.accent || "#ffffff")}">
+    <img src="${esc(item.image)}" alt="${esc(item.title)}" class="card__img" loading="lazy" />
     <div class="card__body">
-      <div class="card__top"><h3 class="card__name">${escapeHtml(item.title)}</h3><div class="card__price">${fmtPrice(item.price, currency)}</div></div>
-      <p class="card__desc">${escapeHtml(item.desc || "")}</p>
-      <div class="card__tags">${tags}</div>
-      <div class="card__cta"><button class="card__btn card__btn--accent" data-action="buy" type="button">Хочу →</button><button class="card__btn" data-action="details" type="button">Спеки</button></div>
+      <div class="card__top"><h3>${esc(item.title)}</h3><strong>${fmtPrice(item.price, currency)}</strong></div>
+      <p>${esc(item.desc || "")}</p>
+      <div class="tags">${(item.tags || []).map((t) => `<span>${esc(t)}</span>`).join("")}</div>
+      <div class="card__actions">
+        <button data-action="details" type="button">Спеки</button>
+        <a href="#contacts">Связаться</a>
+      </div>
     </div>
   </article>`;
 }
 
-function bindFilters(catalog) {
+function renderFilters(items) {
+  const categories = ["all", "ready-pc", "components"];
+  const names = { all: "Все", "ready-pc": "Готовые ПК", components: "Комплектующие / периферия" };
   const wrap = document.getElementById("filters");
-  const categories = ["all", ...new Set(catalog.items.map((i) => i.category || "other"))];
-  wrap.innerHTML = categories.map((c, i) => `<button class="chip ${i === 0 ? "is-active" : ""}" data-filter="${escapeAttr(c)}" type="button">${c === "all" ? "Все" : escapeHtml(c)}</button>`).join("");
-
-  const chips = wrap.querySelectorAll(".chip");
-  chips.forEach((btn) => btn.addEventListener("click", () => {
-    chips.forEach((c) => c.classList.toggle("is-active", c === btn));
+  wrap.innerHTML = categories.map((c, i) => `<button class="chip ${i === 0 ? "is-active" : ""}" data-filter="${c}">${names[c]}</button>`).join("");
+  wrap.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
     const filter = btn.dataset.filter;
+    wrap.querySelectorAll("button").forEach((b) => b.classList.toggle("is-active", b === btn));
     document.querySelectorAll("#catalogGrid .card").forEach((card) => {
-      const show = filter === "all" || card.dataset.category === filter;
-      card.style.display = show ? "" : "none";
-      if (show && !card.classList.contains("is-visible")) {
-        requestAnimationFrame(() => card.classList.add("is-visible"));
-      }
+      card.hidden = filter !== "all" && card.dataset.category !== filter;
     });
-  }));
+  });
 }
 
-function bindCardActions(catalog) {
+function renderReviews() {
+  const track = document.getElementById("reviewsTrack");
+  const slides = [...reviews, ...reviews];
+  track.innerHTML = slides.map((r) => `<article class="review">
+    <img src="${r.avatar}" alt="${esc(r.name)}" />
+    <div><h4>${esc(r.name)}</h4><small>${esc(r.date)} · Покупатель</small><p>${esc(r.text)}</p></div>
+  </article>`).join("");
+}
+
+function openDetails(item) {
+  const modal = document.getElementById("detailsModal");
+  const specs = (item.specs || []).slice(0, 6);
+  document.documentElement.style.setProperty("--dynamic-accent", item.accent || "#ffffff");
+  document.getElementById("modalContent").innerHTML = `
+    <div class="modal__hero">
+      <img src="${esc(item.image)}" alt="${esc(item.title)}" />
+      <div>
+        <h3>${esc(item.title)}</h3>
+        <p>${esc(item.desc || "")}</p>
+        <label>Акцент карточки
+          <input id="accentPicker" type="color" value="${esc(item.accent || "#ffffff")}" />
+        </label>
+      </div>
+    </div>
+    <div class="spec-orbit">
+      ${specs.map((s) => `<div class="spec-pill"><span>${esc(s.label || "Спека")}</span><b>${esc(s.value || "-")}</b></div>`).join("")}
+    </div>`;
+  const picker = document.getElementById("accentPicker");
+  picker?.addEventListener("input", (e) => document.documentElement.style.setProperty("--dynamic-accent", e.target.value));
+  modal.showModal();
+}
+
+function bindCards(catalog) {
   document.getElementById("catalogGrid").addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-action]");
+    const btn = e.target.closest("button[data-action='details']");
+    if (!btn) return;
     const card = e.target.closest(".card");
-    if (!btn || !card) return;
-    const item = catalog.items.find((x) => String(x.id) === card.dataset.id);
-    if (!item) return;
-
-    if (btn.dataset.action === "details") {
-      alert(`${item.title}\n\n${item.desc || ""}\n\n${(item.tags || []).join(" • ")}`);
-    }
-
-    if (btn.dataset.action === "buy") {
-      location.hash = "#contacts";
-    }
+    const item = catalog.items.find((i) => String(i.id) === card?.dataset.id);
+    if (item) openDetails(item);
   });
 }
 
-function heroParallax() {
-  const img = document.getElementById("heroProduct");
-  if (!img || prefersReducedMotion || window.matchMedia("(max-width: 900px)").matches) return;
-
-  let mx = 0;
-  let my = 0;
-  let tx = 0;
-  let ty = 0;
-
-  window.addEventListener("pointermove", (e) => {
-    mx = (e.clientX / window.innerWidth) * 2 - 1;
-    my = (e.clientY / window.innerHeight) * 2 - 1;
-  }, { passive: true });
-
-  const tick = () => {
-    tx += (mx - tx) * 0.06;
-    ty += (my - ty) * 0.06;
-    img.style.transform = `translate3d(${tx * 16}px, ${ty * 14}px, 0) rotateX(${(-ty) * 5}deg) rotateY(${tx * 8}deg)`;
-    requestAnimationFrame(tick);
+function setupHeroScroll() {
+  const heroPc = document.getElementById("heroPc");
+  const onScroll = () => {
+    const y = Math.min(window.scrollY, 500);
+    heroPc.style.transform = `translateY(${y * 0.28}px) rotate(${y * -0.015}deg)`;
+    heroPc.style.opacity = String(1 - y / 700);
   };
-
-  tick();
-}
-
-function setupScrollReveal() {
-  const nodes = document.querySelectorAll(".reveal");
-  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-    nodes.forEach((n) => n.classList.add("is-visible"));
-    return;
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
-
-  nodes.forEach((n) => observer.observe(n));
-}
-
-function setupTopbar() {
-  const bar = document.querySelector(".topbar");
-  if (!bar) return;
-  const update = () => bar.classList.toggle("topbar--scrolled", window.scrollY > 20);
-  update();
-  window.addEventListener("scroll", update, { passive: true });
-}
-
-function playIntro() {
-  const body = document.body;
-  if (prefersReducedMotion) {
-    body.classList.remove("is-loading");
-    body.classList.add("is-ready");
-    return;
-  }
-
-  requestAnimationFrame(() => {
-    body.classList.add("is-ready");
-    setTimeout(() => {
-      body.classList.remove("is-loading");
-      const intro = document.getElementById("intro");
-      if (intro) intro.setAttribute("aria-hidden", "true");
-    }, 1250);
-  });
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
 }
 
 (async function init() {
   document.getElementById("year").textContent = new Date().getFullYear();
   const catalog = await loadCatalog();
-
-  const grid = document.getElementById("catalogGrid");
-  grid.innerHTML = catalog.items.map((i, idx) => cardTemplate(i, catalog.currency || "₽", idx)).join("");
-
-  bindFilters(catalog);
-  bindCardActions(catalog);
-  heroParallax();
-  setupTopbar();
-  setupScrollReveal();
-  playIntro();
+  document.getElementById("catalogGrid").innerHTML = catalog.items.map((item) => cardTemplate(item, catalog.currency)).join("");
+  renderFilters(catalog.items);
+  bindCards(catalog);
+  renderReviews();
+  setupHeroScroll();
 
   document.getElementById("resetCatalog").addEventListener("click", () => {
     clearLocalOverride();
     location.reload();
   });
+  document.getElementById("closeModal").addEventListener("click", () => document.getElementById("detailsModal").close());
 })();
