@@ -1,49 +1,117 @@
 import { getFirebaseStatus, loadCatalog, saveCatalog } from "../catalog-store.js";
 
-const ADMIN_PASS = "kontora";
+const AUTH_KEY = "kontora.auth.ok";
 const $ = (id) => document.getElementById(id);
+let catalog;
+let activeId = null;
 
-function escapeAttr(s = "") {
-  return String(s)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;")
-    .replaceAll("\n", " ");
+function getAuthUrl(nextPath = "../admin/") {
+  return `../auth/?next=${encodeURIComponent(nextPath)}`;
 }
 
-function rowTemplate(item) {
-  const tags = Array.isArray(item.tags) ? item.tags.join(", ") : "";
-  const select = ["gaming", "work", "creator", "budget"]
-    .map(c => `<option value="${c}" ${item.category === c ? "selected" : ""}>${c}</option>`).join("");
-  return `<tr data-id="${escapeAttr(item.id)}">
-    <td><input class="admin-cell" data-k="id" value="${escapeAttr(item.id)}"></td>
-    <td><input class="admin-cell" data-k="title" value="${escapeAttr(item.title)}"></td>
-    <td><input class="admin-cell" data-k="price" type="number" value="${escapeAttr(item.price)}"></td>
-    <td><select class="admin-cell" data-k="category">${select}</select></td>
-    <td><input class="admin-cell" data-k="image" value="${escapeAttr(item.image)}"></td>
-    <td><input class="admin-cell" data-k="tags" value="${escapeAttr(tags)}"></td>
-    <td><input class="admin-cell" data-k="desc" value="${escapeAttr(item.desc || "")}"></td>
-    <td><button type="button" class="mini" data-action="del">Удалить</button></td>
-  </tr>`;
+function ensureAuth() {
+  const isAuthed = sessionStorage.getItem(AUTH_KEY) === "1";
+  if (!isAuthed) {
+    window.location.replace(getAuthUrl("../admin/"));
+    return false;
+  }
+  $("authStatus").textContent = "Профиль: выполнен";
+  return true;
 }
 
-function rowsToCatalog() {
-  const items = [...$("rows").querySelectorAll("tr")].map((tr) => {
-    const get = (k) => tr.querySelector(`[data-k="${k}"]`)?.value?.trim() || "";
-    return {
-      id: get("id"),
-      title: get("title"),
-      price: Number(get("price")) || 0,
-      category: get("category") || "gaming",
-      image: get("image"),
-      tags: get("tags").split(",").map(t => t.trim()).filter(Boolean),
-      desc: get("desc")
-    };
-  }).filter(item => item.id && item.title);
+const AUTH_OK = ensureAuth();
 
-  return { currency: "₽", items };
+function uid() {
+  return "id-" + Math.random().toString(16).slice(2, 7);
+}
+
+function itemButton(item) {
+  return `<button class="item-btn ${item.id === activeId ? "active" : ""}" data-id="${item.id}">${item.title}</button>`;
+}
+
+function renderList() {
+  $("itemList").innerHTML = catalog.items.map(itemButton).join("");
+}
+
+function getItem() {
+  return catalog.items.find((i) => i.id === activeId);
+}
+
+function renderEditor() {
+  const item = getItem();
+  if (!item) {
+    $("editor").innerHTML = "<p class='empty'>Нет товаров. Добавьте новую позицию.</p>";
+    return;
+  }
+
+  $("editor").innerHTML = `
+    <div class="row">
+      <input data-k="title" value="${item.title || ""}" placeholder="Название" />
+      <input data-k="price" type="number" value="${item.price || 0}" placeholder="Цена" />
+    </div>
+    <div class="row">
+      <select data-k="category">
+        <option value="ready-pc" ${item.category === "ready-pc" ? "selected" : ""}>Готовые ПК</option>
+        <option value="components" ${item.category === "components" ? "selected" : ""}>Комплектующие / периферия</option>
+      </select>
+      <input data-k="accent" type="color" value="${item.accent || "#ffffff"}" />
+    </div>
+    <input data-k="image" value="${item.image || ""}" placeholder="URL изображения" />
+    <textarea data-k="desc" rows="3" placeholder="Описание">${item.desc || ""}</textarea>
+    <input data-k="tags" value="${(item.tags || []).join(", ")}" placeholder="Теги через запятую" />
+    <div>
+      <b>Спеки</b>
+      <div id="specRows">${(item.specs || []).map((s, i) => `<div class="spec-row"><input data-spec-label="${i}" value="${s.label || ""}" placeholder="Параметр" /><input data-spec-value="${i}" value="${s.value || ""}" placeholder="Значение" /><button type="button" data-del-spec="${i}" class="mini">✕</button></div>`).join("")}</div>
+      <button id="addSpec" class="mini" type="button">+ Добавить спеку</button>
+    </div>
+    <button id="deleteItem" class="mini danger" type="button">Удалить товар</button>
+  `;
+}
+
+function syncFromEditor() {
+  const item = getItem();
+  if (!item) return;
+  const get = (k) => $("editor").querySelector(`[data-k='${k}']`)?.value || "";
+  item.title = get("title").trim();
+  item.price = Number(get("price")) || 0;
+  item.category = get("category");
+  item.accent = get("accent");
+  item.image = get("image").trim();
+  item.desc = get("desc").trim();
+  item.tags = get("tags").split(",").map((x) => x.trim()).filter(Boolean);
+  item.specs = [...$("editor").querySelectorAll(".spec-row")].map((row) => ({
+    label: row.querySelector("[data-spec-label]")?.value?.trim() || "",
+    value: row.querySelector("[data-spec-value]")?.value?.trim() || ""
+  })).filter((s) => s.label || s.value);
+}
+
+function bindEditorEvents() {
+  $("editor").addEventListener("input", () => {
+    syncFromEditor();
+    renderList();
+  });
+
+  $("editor").addEventListener("click", (e) => {
+    const delSpec = e.target.closest("button[data-del-spec]");
+    if (delSpec) {
+      const idx = Number(delSpec.dataset.delSpec);
+      getItem().specs.splice(idx, 1);
+      renderEditor();
+      return;
+    }
+    if (e.target.id === "addSpec") {
+      getItem().specs = getItem().specs || [];
+      getItem().specs.push({ label: "", value: "" });
+      renderEditor();
+      return;
+    }
+    if (e.target.id === "deleteItem") {
+      catalog.items = catalog.items.filter((i) => i.id !== activeId);
+      activeId = catalog.items[0]?.id || null;
+      renderList();
+      renderEditor();
+    }
+  });
 }
 
 function downloadJson(data) {
@@ -54,78 +122,63 @@ function downloadJson(data) {
   a.click();
 }
 
-function login(onSuccess) {
-  $("loginBtn").addEventListener("click", () => {
-    if ($("pass").value !== ADMIN_PASS) return alert("Неверный пароль");
-    $("authGate").hidden = true;
-    $("panel").hidden = false;
-    onSuccess();
-  });
-
-  $("pass").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") $("loginBtn").click();
-  });
-}
-
 (async function init() {
+  if (!AUTH_OK) return;
   $("syncState").textContent = `Firebase: ${getFirebaseStatus() ? "подключен" : "не настроен"}`;
+  catalog = await loadCatalog();
+  activeId = catalog.items[0]?.id || null;
 
-  const catalog = await loadCatalog();
+  renderList();
+  renderEditor();
+  bindEditorEvents();
 
-  login(() => {
-    const render = () => {
-      $("rows").innerHTML = catalog.items.map(rowTemplate).join("");
-    };
-    render();
+  $("itemList").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-id]");
+    if (!btn) return;
+    syncFromEditor();
+    activeId = btn.dataset.id;
+    renderList();
+    renderEditor();
+  });
 
-    $("addBtn").addEventListener("click", () => {
-      catalog.items.unshift({
-        id: "k" + Math.random().toString(16).slice(2, 6),
-        title: "Новый товар",
-        price: 0,
-        category: "gaming",
-        image: "https://i.postimg.cc/DfqdMBVk/27367CFA-6E85-469F-A438-A1EDC62D7600.png",
-        tags: ["new"],
-        desc: "Описание"
-      });
-      render();
-    });
+  $("addBtn").addEventListener("click", () => {
+    const item = { id: uid(), title: "Новый товар", price: 0, category: "ready-pc", image: "", desc: "", tags: [], accent: "#ffffff", specs: [] };
+    catalog.items.unshift(item);
+    activeId = item.id;
+    renderList();
+    renderEditor();
+  });
 
-    $("rows").addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-action='del']");
-      const tr = e.target.closest("tr");
-      if (!btn || !tr) return;
-      catalog.items = catalog.items.filter(item => String(item.id) !== tr.dataset.id);
-      render();
-    });
+  $("saveBtn").addEventListener("click", async () => {
+    syncFromEditor();
+    const cloud = await saveCatalog(catalog);
+    alert(cloud ? "Сохранено локально и в Firebase" : "Сохранено локально");
+  });
 
-    $("saveBtn").addEventListener("click", async () => {
-      const updated = rowsToCatalog();
-      const cloudSaved = await saveCatalog(updated);
-      alert(cloudSaved ? "Сохранено локально + в Firebase" : "Сохранено локально (Firebase не активен)");
-    });
+  $("exportBtn").addEventListener("click", () => {
+    syncFromEditor();
+    downloadJson(catalog);
+  });
 
-    $("exportBtn").addEventListener("click", () => downloadJson(rowsToCatalog()));
+  $("importFile").addEventListener("change", async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text());
+      if (!Array.isArray(parsed.items)) throw new Error();
+      catalog = parsed;
+      activeId = catalog.items[0]?.id || null;
+      renderList();
+      renderEditor();
+    } catch {
+      alert("Некорректный JSON");
+    }
+    e.target.value = "";
+  });
 
-    $("importFile").addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      try {
-        const parsed = JSON.parse(await file.text());
-        if (!Array.isArray(parsed.items)) throw new Error("bad format");
-        catalog.items = parsed.items;
-        render();
-      } catch {
-        alert("Файл не похож на catalog JSON");
-      } finally {
-        e.target.value = "";
-      }
-    });
-
-    $("clearBtn").addEventListener("click", () => {
-      if (!confirm("Удалить все товары?")) return;
-      catalog.items = [];
-      render();
-    });
+  $("logoutBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    sessionStorage.removeItem(AUTH_KEY);
+    window.location.href = "../auth/";
   });
 })();

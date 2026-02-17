@@ -1,22 +1,5 @@
-:root{--pad:16px;--radius:18px}
-
-html,body{max-width:100%;overflow-x:clip;overscroll-behavior-x:none}
-body{touch-action:pan-y pinch-zoom}
-input,select,textarea,button{font-size:16px}
-.topbar{padding:14px var(--pad)}
-.topbar--scrolled{padding:10px var(--pad)}
-.nav{gap:10px;font-size:13px}
-.nav__ghost{display:none}
-.hero{min-height:auto;padding-top:76px}
-.hero__bgtype{top:8vh;font-size:clamp(56px,24vw,120px)}
-.hero__center{grid-template-columns:1fr;padding:5vh 0 6vh;gap:22px}
-.hero__title{font-size:clamp(30px,9vw,42px)}
-.hero__subtitle{font-size:14px}
-.hero__product{width:min(500px,92%)}
-.section{padding:62px 0}
-.section__head{grid-template-columns:1fr}
-.section__actions{justify-content:flex-start;flex-wrap:wrap}
-.card,.contactCard{grid-column:span 12}
-.card__media{height:200px}
-.footer{flex-direction:column;gap:8px}
-.intro__line{bottom:22vh}
+.topbar{padding:0 14px}.nav{gap:10px;font-size:14px}
+.section h2{font-size:28px}.section{width:calc(100% - 20px);padding:52px 0}
+.grid{grid-template-columns:1fr}.card{grid-column:span 1}
+.card__img{height:210px}.contacts-grid{grid-template-columns:1fr}
+.modal__hero{grid-template-columns:1fr}.spec-orbit{grid-template-columns:1fr 1fr}

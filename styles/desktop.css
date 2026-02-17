@@ -1,6 +1,1 @@
-.hero__center{grid-template-columns:1.06fr .94fr}
-.section__head{grid-template-columns:1fr auto}
-.card{grid-column:span 4;transition:transform .4s var(--ease),border-color .35s var(--ease),box-shadow .4s var(--ease)}
-.contactCard{grid-column:span 4}
-.card:hover{transform:translateY(-8px);border-color:rgba(244,243,238,.24);box-shadow:var(--shadow)}
-.card:hover .card__img{transform:scale(1.08) translateY(-4px)}
+/* Desktop-specific overrides are intentionally minimal. */

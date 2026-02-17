@@ -2,62 +2,49 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=2,viewport-fit=cover,user-scalable=yes" />
-  <meta name="theme-color" content="#0e0d0a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="kontora admin" />
-  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,viewport-fit=cover" />
   <title>Admin — .kontora</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/base.css" />
   <link rel="stylesheet" href="./admin.css" />
 </head>
 <body>
-  <div class="noise" aria-hidden="true"></div>
   <header class="topbar">
-    <a class="brand" href="../index.html"><span class="brand__dot">.</span><span class="brand__name">kontora</span></a>
-    <nav class="nav"><a href="../index.html#catalog">На сайт</a></nav>
+    <a class="brand" href="../index.html"><span class="brand__dot">.</span>kontora admin</a>
+    <nav class="nav">
+      <span id="authStatus" class="mini auth-pill">Профиль: не выполнен</span>
+      <a href="../index.html">На сайт</a>
+      <a href="../auth/" id="logoutBtn">Выйти</a>
+    </nav>
   </header>
 
   <main class="admin-main">
-    <section class="section admin-section">
+    <section class="section admin-shell">
       <div class="section__head">
         <div>
-          <h2 class="section__title">Admin panel</h2>
-          <p class="section__desc">Управление каталогом сайта. Подготовлено под будущий вход через Firebase Auth.</p>
+          <h2>Публикация витрины</h2>
+          <p>Каталог слева, полная форма редактирования справа.</p>
         </div>
-        <div class="section__actions"><span id="syncState" class="mini">Firebase: выключен</span></div>
+        <span id="syncState" class="mini"></span>
       </div>
 
-      <div id="authGate" class="contactCard auth-card">
-        <h3 class="contactCard__title">Вход в панель</h3>
-        <p class="muted">Сейчас включен временный пароль. На следующем этапе заменяется на Firebase Authentication.</p>
-        <div class="auth-row">
-          <input id="pass" type="password" placeholder="Введите пароль" class="admin-input" />
-          <button id="loginBtn" class="btn btn--solid" type="button">Войти</button>
-        </div>
-        <p class="muted tiny">Пароль по умолчанию: <b>kontora</b>. Смените в <code>admin/admin.js</code>.</p>
-      </div>
-
-      <div id="panel" hidden>
-        <div class="admin-toolbar">
-          <button id="addBtn" class="chip is-active" type="button">+ Добавить товар</button>
-          <button id="saveBtn" class="mini" type="button">Сохранить</button>
-          <button id="exportBtn" class="mini" type="button">Экспорт JSON</button>
-          <label class="mini upload">Импорт JSON<input id="importFile" type="file" accept="application/json" hidden></label>
-          <button id="clearBtn" class="mini" type="button">Очистить</button>
-        </div>
-        <div class="table-shell">
-          <table>
-            <thead><tr><th>ID</th><th>Название</th><th>Цена</th><th>Категория</th><th>Изображение URL</th><th>Теги</th><th>Описание</th><th>Удалить</th></tr></thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
+      <div id="panel" class="panel">
+        <aside>
+          <button id="addBtn" class="mini" type="button">+ Добавить товар</button>
+          <div id="itemList" class="item-list"></div>
+        </aside>
+        <section>
+          <div id="editor" class="editor"></div>
+          <div class="toolbar">
+            <button id="saveBtn" class="mini" type="button">Сохранить</button>
+            <button id="exportBtn" class="mini" type="button">Экспорт JSON</button>
+            <label class="mini">Импорт JSON<input id="importFile" type="file" hidden accept="application/json" /></label>
+          </div>
+        </section>
       </div>
     </section>
   </main>
