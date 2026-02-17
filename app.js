@@ -24,7 +24,7 @@ function cardTemplate(item, currency) {
   </article>`;
 }
 
-function renderFilters(items) {
+function renderFilters() {
   const categories = ["all", "ready-pc", "components"];
   const names = { all: "Все", "ready-pc": "Готовые ПК", components: "Комплектующие / периферия" };
   const wrap = document.getElementById("filters");
@@ -67,8 +67,9 @@ function openDetails(item) {
     <div class="spec-orbit">
       ${specs.map((s) => `<div class="spec-pill"><span>${esc(s.label || "Спека")}</span><b>${esc(s.value || "-")}</b></div>`).join("")}
     </div>`;
-  const picker = document.getElementById("accentPicker");
-  picker?.addEventListener("input", (e) => document.documentElement.style.setProperty("--dynamic-accent", e.target.value));
+  document.getElementById("accentPicker")?.addEventListener("input", (e) => {
+    document.documentElement.style.setProperty("--dynamic-accent", e.target.value);
+  });
   modal.showModal();
 }
 
@@ -83,21 +84,41 @@ function bindCards(catalog) {
 }
 
 function setupHeroScroll() {
+  const hero = document.getElementById("hero");
   const heroPc = document.getElementById("heroPc");
-  const onScroll = () => {
-    const y = Math.min(window.scrollY, 500);
-    heroPc.style.transform = `translateY(${y * 0.28}px) rotate(${y * -0.015}deg)`;
-    heroPc.style.opacity = String(1 - y / 700);
+  if (!hero || !heroPc) return;
+
+  let ticking = false;
+  const update = () => {
+    const rect = hero.getBoundingClientRect();
+    const distance = Math.max(hero.offsetHeight - window.innerHeight, 1);
+    const progress = Math.min(Math.max(-rect.top / distance, 0), 1);
+
+    const y = progress * 110;
+    const scale = 1 - progress * 0.06;
+    const fade = 1 - progress * 0.35;
+
+    heroPc.style.transform = `translate3d(0, ${y}px, 0) scale(${scale})`;
+    heroPc.style.opacity = String(fade);
+    ticking = false;
   };
-  onScroll();
+
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  };
+
+  update();
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
 }
 
 (async function init() {
   document.getElementById("year").textContent = new Date().getFullYear();
   const catalog = await loadCatalog();
   document.getElementById("catalogGrid").innerHTML = catalog.items.map((item) => cardTemplate(item, catalog.currency)).join("");
-  renderFilters(catalog.items);
+  renderFilters();
   bindCards(catalog);
   renderReviews();
   setupHeroScroll();

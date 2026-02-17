@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Auth — .kontora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/base.css" />
+  <link rel="stylesheet" href="./auth.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+      <p class="auth-kicker">KONTORA Admin Access</p>
+      <h1>Вход в админ-панель</h1>
+      <p class="muted">Временная базовая защита до внедрения полноценной авторизации.</p>
+      <form id="authForm" class="auth-form">
+        <label for="pass">Пароль</label>
+        <input id="pass" type="password" placeholder="Введите пароль" autocomplete="current-password" required />
+        <button type="submit">Войти</button>
+      </form>
+      <p id="error" class="error" hidden>Неверный пароль</p>
+      <a class="back" href="/">← На главную</a>
+    </section>
+  </main>
+  <script type="module" src="./auth.js"></script>
+</body>
+</html>

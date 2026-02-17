@@ -1,9 +1,14 @@
 import { getFirebaseStatus, loadCatalog, saveCatalog } from "../catalog-store.js";
 
-const ADMIN_PASS = "kontora";
+const AUTH_KEY = "kontora.auth.ok";
 const $ = (id) => document.getElementById(id);
 let catalog;
 let activeId = null;
+
+if (sessionStorage.getItem(AUTH_KEY) !== "1") {
+  const next = encodeURIComponent("/admin/");
+  window.location.replace(`/auth/?next=${next}`);
+}
 
 function uid() {
   return "id-" + Math.random().toString(16).slice(2, 7);
@@ -23,7 +28,11 @@ function getItem() {
 
 function renderEditor() {
   const item = getItem();
-  if (!item) return;
+  if (!item) {
+    $("editor").innerHTML = "<p class='empty'>Нет товаров. Добавьте новую позицию.</p>";
+    return;
+  }
+
   $("editor").innerHTML = `
     <div class="row">
       <input data-k="title" value="${item.title || ""}" placeholder="Название" />
@@ -41,10 +50,10 @@ function renderEditor() {
     <input data-k="tags" value="${(item.tags || []).join(", ")}" placeholder="Теги через запятую" />
     <div>
       <b>Спеки</b>
-      <div id="specRows">${(item.specs || []).map((s, i) => `<div class="spec-row"><input data-spec-label="${i}" value="${s.label || ""}" placeholder="Параметр" /><input data-spec-value="${i}" value="${s.value || ""}" placeholder="Значение" /><button type="button" data-del-spec="${i}">✕</button></div>`).join("")}</div>
+      <div id="specRows">${(item.specs || []).map((s, i) => `<div class="spec-row"><input data-spec-label="${i}" value="${s.label || ""}" placeholder="Параметр" /><input data-spec-value="${i}" value="${s.value || ""}" placeholder="Значение" /><button type="button" data-del-spec="${i}" class="mini">✕</button></div>`).join("")}</div>
       <button id="addSpec" class="mini" type="button">+ Добавить спеку</button>
     </div>
-    <button id="deleteItem" class="mini" type="button">Удалить товар</button>
+    <button id="deleteItem" class="mini danger" type="button">Удалить товар</button>
   `;
 }
 
@@ -102,10 +111,11 @@ function downloadJson(data) {
   a.click();
 }
 
-function unlockPanel() {
-  $("authGate").hidden = true;
-  $("panel").hidden = false;
+(async function init() {
+  $("syncState").textContent = `Firebase: ${getFirebaseStatus() ? "подключен" : "не настроен"}`;
+  catalog = await loadCatalog();
   activeId = catalog.items[0]?.id || null;
+
   renderList();
   renderEditor();
   bindEditorEvents();
@@ -153,13 +163,10 @@ function unlockPanel() {
     }
     e.target.value = "";
   });
-}
 
-(async function init() {
-  $("syncState").textContent = `Firebase: ${getFirebaseStatus() ? "подключен" : "не настроен"}`;
-  catalog = await loadCatalog();
-  $("loginBtn").addEventListener("click", () => {
-    if ($("pass").value !== ADMIN_PASS) return alert("Неверный пароль");
-    unlockPanel();
+  $("logoutBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    sessionStorage.removeItem(AUTH_KEY);
+    window.location.href = "/auth/";
   });
 })();

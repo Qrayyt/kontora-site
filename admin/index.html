@@ -15,7 +15,7 @@
 <body>
   <header class="topbar">
     <a class="brand" href="../index.html"><span class="brand__dot">.</span>kontora admin</a>
-    <nav class="nav"><a href="../index.html">На сайт</a></nav>
+    <nav class="nav"><a href="../index.html">На сайт</a><a href="/auth/" id="logoutBtn">Выйти</a></nav>
   </header>
 
   <main class="admin-main">
@@ -23,17 +23,12 @@
       <div class="section__head">
         <div>
           <h2>Публикация витрины</h2>
-          <p>Сценарий как в форме объявления: слева список позиций, справа карточка редактирования.</p>
+          <p>Интерфейс уровня «серьёзная организация»: каталог слева, полная форма редактирования справа.</p>
         </div>
         <span id="syncState" class="mini"></span>
       </div>
 
-      <div id="authGate" class="auth">
-        <input id="pass" type="password" placeholder="Пароль" />
-        <button id="loginBtn" type="button">Войти</button>
-      </div>
-
-      <div id="panel" class="panel" hidden>
+      <div id="panel" class="panel">
         <aside>
           <button id="addBtn" class="mini" type="button">+ Добавить товар</button>
           <div id="itemList" class="item-list"></div>
